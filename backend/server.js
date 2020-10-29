@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import colors from "colors";
 import dbConnect from "./mongo/dbConnect.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -16,7 +17,10 @@ const mongoConnection = MONGO.replace(
 
 dbConnect(mongoConnection);
 
-app.get("/", (req, res) => res.send("Hello!"));
+app.use(express.json());
+
+// user route
+app.use("/api", userRoutes);
 
 const PORT = process.env.PORT || 5000;
 
