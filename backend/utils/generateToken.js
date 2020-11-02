@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
 // generates json web token that lasts 30 days
 const generateToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+	jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "24h" });
 
-export default generateToken
+export default generateToken;
