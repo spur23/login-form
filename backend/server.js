@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import morgan from "morgan";
 import colors from "colors";
 import dbConnect from "./mongo/dbConnect.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -17,6 +18,7 @@ const mongoConnection = MONGO.replace(
 
 dbConnect(mongoConnection);
 
+app.use(morgan("dev"));
 app.use(express.json());
 
 // user route
