@@ -26,6 +26,7 @@ userSchema.methods.checkPassword = async function (password) {
 	return await bcrypt.compare(password, this.password);
 };
 
+// Encrypts the password before saving a new user
 userSchema.pre("save", async function (next) {
 	const salt = await bcrypt.genSalt(10);
 	this.password = await bcrypt.hash(this.password, salt);
