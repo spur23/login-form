@@ -1,13 +1,15 @@
-const registrationValidation = (name, email, password) => {
+const registrationValidation = (nameFirst, nameLast, email, password) => {
 	// validates the data entered for new user registration
-	if (name && email && password) {
+	if (nameFirst && nameLast && email && password) {
 		return true;
-	} else if (!name) {
-		return "Name";
+	} else if (!nameFirst) {
+		return "First Name";
 	} else if (!email) {
 		return "Email";
 	} else if (!password) {
 		return "Password";
+	} else if (!nameLast) {
+		return "Last Name";
 	}
 };
 
