@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, BrowserRouter as Router } from "react-router-dom";
+import { StoreContextProvider } from "./context/store";
 import NavBar from "./Components/NavBar";
 import HomePage from "./Pages/HomePage";
 import Loginpage from "./Pages/Loginpage";
@@ -16,16 +17,18 @@ const Container = styled.div`
 
 const App = () => {
 	return (
-		<Router>
-			<Container>
-				<NavBar />
-				<main>
-					<Route path='/home' component={HomePage} />
-					<Route path='/login' component={Loginpage} />
-					<Route path='/register' component={RegisterPage} />
-				</main>
-			</Container>
-		</Router>
+		<StoreContextProvider>
+			<Router>
+				<Container>
+					<NavBar />
+					<main>
+						<Route path='/home' component={HomePage} />
+						<Route path='/login' component={Loginpage} />
+						<Route path='/register' component={RegisterPage} />
+					</main>
+				</Container>
+			</Router>
+		</StoreContextProvider>
 	);
 };
 
