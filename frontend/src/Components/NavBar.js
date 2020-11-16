@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { StoreContext } from "../context/store";
+import { userLogout } from "../context/userActions";
+import { USER_LOGOUT_SUCCESS } from "../context/constants/userConstants";
 
 const Wrapper = styled.nav`
 	background: #74b9ff;
@@ -10,42 +13,51 @@ const Wrapper = styled.nav`
 	justify-content: center;
 	right: 0;
 	left: 0;
-	& a {
+	& a,
+	button {
 		margin-right: 2rem;
 		text-decoration: none;
 		cursor: pointer;
+		color: #ffeaa7;
 	}
 	& a:visited {
 		color: #ffeaa7;
 	}
-	& a:hover {
+	& a:hover,
+	button:hover {
 		transform: scale(1.02);
+	}
+
+	& button {
+		background: none;
+		border: none;
 	}
 `;
 
-const routes = [
-	{
-		path: "/home",
-		text: "Home",
-	},
-	{
-		path: "/login",
-		text: "Login",
-	},
-	{
-		path: "register",
-		text: "Register",
-	},
-];
-
 const NavBar = () => {
+	const [state, dispatch] = useContext(StoreContext);
+	const {
+		user: { userInfo },
+	} = state;
+
+	const onClickHandler = (e) => {
+		userLogout();
+		dispatch({ type: USER_LOGOUT_SUCCESS });
+	};
+
 	return (
 		<Wrapper>
-			{routes.map((route, i) => (
-				<Link to={route.path} exact={route.exact} key={i}>
-					{route.text}
-				</Link>
-			))}
+			<Link to='/home'>Home</Link>
+			<>
+				{!userInfo ? (
+					<>
+						<Link to='/login'>Login</Link>
+						<Link to='/register'>Register</Link>
+					</>
+				) : (
+					<button onClick={onClickHandler}>Logout</button>
+				)}
+			</>
 		</Wrapper>
 	);
 };

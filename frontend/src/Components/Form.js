@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import InputField from "./InputField";
+import ErrorMessage from "./ErrorMessage";
 import styled from "styled-components";
 
 const StyledForm = styled.form`
@@ -7,6 +8,7 @@ const StyledForm = styled.form`
 	flex-direction: column;
 	width: 25vw;
 	margin: 5rem auto;
+	margin-top: 0;
 	padding: 1.5rem;
 
 	& button {
@@ -32,16 +34,14 @@ const StyledForm = styled.form`
 		box-sizing: border-box;
 		margin: 0.5em 0 0.5em 0;
 	}
-`;
 
-const Error = styled.span`
-	color: #d63031;
-	background-color: #fab1a0;
-	border: 1px solid #e17055;
-	border-radius: 3px;
+	& .input-error {
+		height: 1.5rem;
+	}
 `;
 
 const Form = ({ obj, title, onSubmit }) => {
+	useEffect(() => {}, [obj]);
 	return (
 		<StyledForm>
 			<h1>{title}</h1>
@@ -52,12 +52,17 @@ const Form = ({ obj, title, onSubmit }) => {
 						name={el.name}
 						value={el.value}
 						label={el.label}
+						defaultValue={el.defaultValue}
 						onChange={el.onChange}
 						key={`Input-${el.name}`}
 					/>
-					{el.errorMessage === "" ? null : (
-						<Error key={`${el.name}error`}>{el.errorMessage}</Error>
-					)}
+					<div className='input-error'>
+						{el.errorMessage === "" ? null : (
+							<ErrorMessage key={`${el.name}error`}>
+								{el.errorMessage}
+							</ErrorMessage>
+						)}
+					</div>
 				</React.Fragment>
 			))}
 			<button type='submit' onClick={onSubmit}>

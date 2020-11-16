@@ -1,73 +1,27 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faTimes } from "@fortawesome/free-solid-svg-icons";
+import React, { useState, useContext, useEffect } from "react";
+import ErrorMessage from "../Components/ErrorMessage";
 import Form from "../Components/Form";
-
-const checkError = (type, value, password) => {
-	if (type === "nameFirst" || type === "nameLast") {
-		if (value.length === 0) {
-			return "";
-		} else if (value.length <= 2) {
-			if (type === "nameFirst") {
-				return "First name should contain at least 3 characters";
-			} else {
-				return "Last name should contain at least 3 characters";
-			}
-		} else {
-			return "";
-		}
-	} else if (type === "email") {
-		if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || value.length === 0) {
-			return "";
-		} else {
-			return "Please enter a valid email address";
-		}
-	} else if (type === "passwordConfirm") {
-		if (value === password || value.length === 0) {
-			return "";
-		} else {
-			return "Must match password";
-		}
-	} else {
-		return "";
-	}
-};
-
-const checkPassword = (value) => {
-	const passwordLength = value.length >= 8;
-	const passwordContainNumber = passwordValidateNumbers(value) >= 2;
-	const passwordCapitalLetters = passwordValidateCapitalLetters(value) >= 2;
-	const passwordCharacters = passwordValidateCharacters(value);
-
-	return {
-		length: passwordLength,
-		numbers: passwordContainNumber,
-		capitalLetters: passwordCapitalLetters,
-		characters: passwordCharacters,
-	};
-};
-
-const passwordValidateCapitalLetters = (password) => {
-	const passArray = password.split("");
-	// check for capital letters, if any returns quantity
-	return passArray.filter((letter) => /[A-Z]/g.test(letter)).length;
-};
-
-const passwordValidateNumbers = (password) => {
-	const passArray = password.split("");
-	// check if password contains numbers, if any returns quantity
-	return passArray.filter((letter) => /\d/.test(letter)).length;
-};
-
-const passwordValidateCharacters = (password) => {
-	const passArray = password.split("");
-	// check if password contains special characters, if any returns quantity
-	return passArray.filter((letter) => /[@!#$%+/=~]/.test(letter)).length;
-};
+import { StoreContext } from "../context/store";
+import styled from "styled-components";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+	faCheck,
+	faTimes,
+	faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+	checkPassword,
+	passwordCapitalLetterQuantity,
+	passwordCharacterQuantity,
+	passwordNumberQuantitiy,
+	passwordSpecialCharacterQuantity,
+} from "../utils/PasswordVerification";
+import { checkError } from "../utils/RegisterFormErrorCheck";
 
 const Container = styled.div`
 	display: flex;
+	flex-direction: column;
 	width: 50vw;
 	margin: 5rem auto;
 	padding: 1.5rem;
@@ -85,9 +39,18 @@ const Container = styled.div`
 			width: 5%;
 		}
 	}
+
+	& .register-error {
+		margin-top: 5rem;
+	}
 `;
 
-const RegisterPage = () => {
+const FormContainer = styled.div`
+	display: flex;
+	flex-direction: row;
+`;
+
+const RegisterPage = ({ location, history }) => {
 	const [register, setRegister] = useState({
 		nameFirst: "",
 		nameLast: "",
@@ -102,13 +65,19 @@ const RegisterPage = () => {
 		password: "",
 		passwordConfirm: "",
 	});
-
 	const [passwordCheck, setPasswordCheck] = useState({
 		length: false,
 		numbers: false,
 		capitalLetters: false,
 		characters: false,
 	});
+	const [error, setError] = useState("");
+
+	const [state, dispatch] = useContext(StoreContext);
+
+	useEffect(() => {
+		dispatch({ type: "update_user" });
+	}, [dispatch]);
 
 	const handleChange = (e) => {
 		const value = e.target.value;
@@ -121,8 +90,62 @@ const RegisterPage = () => {
 		}
 	};
 
-	const submitHandler = (e) => {
-		e.preventDefault();
+	const submitHandler = async (event) => {
+		event.preventDefault();
+		if (register.nameFirst.length <= 3) {
+			setError("First Name is required.");
+			return;
+		} else if (register.nameLast <= 3) {
+			setError("Last Name is required.");
+			return;
+		} else if (register.email === "") {
+			setError("Email is required.");
+			return;
+		} else if (register.password === "" || register.password === "") {
+			setError("Password is required.");
+			return;
+		} else if (!passwordCheck.length) {
+			setError(
+				`Password must be at least ${passwordCharacterQuantity} characters.`
+			);
+			return;
+		} else if (!passwordCheck.numbers) {
+			setError(
+				`Password must contain at least ${passwordNumberQuantitiy} numbers.`
+			);
+			return;
+		} else if (!passwordCheck.capitalLetters) {
+			setError(
+				`Password must contain at least ${passwordCapitalLetterQuantity} capital letter.`
+			);
+			return;
+		} else if (!passwordCheck.characters) {
+			setError(
+				`Password must contain at least ${passwordSpecialCharacterQuantity} special characters.`
+			);
+			return;
+		}
+
+		try {
+			const { data } = await axios.post(
+				"/api/register",
+				{
+					nameFirst: register.nameFirst,
+					nameLast: register.nameLast,
+					email: register.email,
+					password: register.password,
+				},
+				{ headers: { "Content-Type": "application/json" } }
+			);
+		} catch (error) {
+			const {
+				response: {
+					data: { message },
+				},
+			} = error;
+			setError(message);
+			console.log(message);
+		}
 	};
 
 	const formObject = [
@@ -130,6 +153,7 @@ const RegisterPage = () => {
 			type: "text",
 			name: "nameFirst",
 			label: "First Name",
+			defaultValue: "First Name",
 			onChange: handleChange,
 			value: register.name,
 			errorMessage: errorMessage.nameFirst,
@@ -138,6 +162,7 @@ const RegisterPage = () => {
 			type: "text",
 			name: "nameLast",
 			label: "Last Name",
+			defaultValue: "Last Name",
 			onChange: handleChange,
 			value: register.name,
 			errorMessage: errorMessage.nameLast,
@@ -170,73 +195,97 @@ const RegisterPage = () => {
 
 	return (
 		<Container>
-			<Form obj={formObject} title='Register' onSubmit={submitHandler} />
-			<div className='password-requirements'>
-				<h4>Password must contain the following:</h4>
-				<p>
-					{passwordCheck.length ? (
-						<FontAwesomeIcon
-							icon={faCheck}
-							color='#00b894'
-							className='icon'
-						/>
-					) : (
-						<FontAwesomeIcon
-							icon={faTimes}
-							color='#d63031'
-							className='icon'
-						/>
-					)}{" "}
-					Be at least 8 characters
-				</p>
-				<p>
-					{passwordCheck.capitalLetters ? (
-						<FontAwesomeIcon
-							icon={faCheck}
-							color='#00b894'
-							className='icon'
-						/>
-					) : (
-						<FontAwesomeIcon
-							icon={faTimes}
-							color='#d63031'
-							className='icon'
-						/>
-					)}{" "}
-					Contain 2 capital letters
-				</p>
-				<p>
-					{passwordCheck.numbers ? (
-						<FontAwesomeIcon
-							icon={faCheck}
-							color='#00b894'
-							className='icon'
-						/>
-					) : (
-						<FontAwesomeIcon
-							icon={faTimes}
-							color='#d63031'
-							className='icon'
-						/>
-					)}{" "}
-					Contain at least 2 numbers
-				</p>
-				<p>
-					{passwordCheck.characters ? (
-						<FontAwesomeIcon
-							icon={faCheck}
-							color='#00b894'
-							className='icon'
-						/>
-					) : (
-						<FontAwesomeIcon
-							icon={faTimes}
-							color='#d63031'
-							className='icon'
-						/>
-					)}{" "}
-					Contain at least 1 of the following @!#$%+/=~
-				</p>
+			<div style={{ display: "flex", flexDirection: "column" }}>
+				<div
+					style={{
+						height: "3rem",
+						alignSelf: "center",
+					}}
+				>
+					{error === "" ? null : (
+						<ErrorMessage>
+							<FontAwesomeIcon
+								icon={faExclamationTriangle}
+								color='red'
+							/>{" "}
+							{error}
+						</ErrorMessage>
+					)}
+				</div>
+				<FormContainer>
+					<Form
+						obj={formObject}
+						title='Register'
+						onSubmit={submitHandler}
+					/>
+					<div className='password-requirements'>
+						<h4>Password must contain the following:</h4>
+						<p>
+							{passwordCheck.length ? (
+								<FontAwesomeIcon
+									icon={faCheck}
+									color='#00b894'
+									className='icon'
+								/>
+							) : (
+								<FontAwesomeIcon
+									icon={faTimes}
+									color='#d63031'
+									className='icon'
+								/>
+							)}{" "}
+							{`Be at least ${passwordCharacterQuantity} characters`}
+						</p>
+						<p>
+							{passwordCheck.capitalLetters ? (
+								<FontAwesomeIcon
+									icon={faCheck}
+									color='#00b894'
+									className='icon'
+								/>
+							) : (
+								<FontAwesomeIcon
+									icon={faTimes}
+									color='#d63031'
+									className='icon'
+								/>
+							)}{" "}
+							{`Contain ${passwordCapitalLetterQuantity} capital letters`}
+						</p>
+						<p>
+							{passwordCheck.numbers ? (
+								<FontAwesomeIcon
+									icon={faCheck}
+									color='#00b894'
+									className='icon'
+								/>
+							) : (
+								<FontAwesomeIcon
+									icon={faTimes}
+									color='#d63031'
+									className='icon'
+								/>
+							)}{" "}
+							{`Contain at least ${passwordNumberQuantitiy} numbers`}
+						</p>
+						<p>
+							{passwordCheck.characters ? (
+								<FontAwesomeIcon
+									icon={faCheck}
+									color='#00b894'
+									className='icon'
+								/>
+							) : (
+								<FontAwesomeIcon
+									icon={faTimes}
+									color='#d63031'
+									className='icon'
+								/>
+							)}{" "}
+							{`Contain at least ${passwordSpecialCharacterQuantity} of the following @!#$%+/=~`}
+						</p>
+					</div>
+				</FormContainer>
 			</div>
 		</Container>
 	);

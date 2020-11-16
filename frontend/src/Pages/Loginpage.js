@@ -1,11 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import Form from "../Components/Form";
 import styled from "styled-components";
+import ErrorMessage from "../Components/ErrorMessage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { StoreContext } from "../context/store";
+import {
+	USER_LOGIN_FAIL,
+	USER_LOGIN_REQUEST,
+	USER_LOGIN_SUCCESS,
+} from "../context/constants/userConstants";
+import { userLogin } from "../context/userActions";
 
 const Container = styled.div`
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	margin: auto;
 	margin-top: 5rem;
+	box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+	border-radius: 4px;
+	width: 50vw;
 	& form {
 		display: flex;
 		flex-direction: column;
@@ -24,8 +40,18 @@ const Container = styled.div`
 	}
 `;
 
-const Loginpage = () => {
-	const [form, setForm] = useState({});
+const Loginpage = ({ history }) => {
+	const [form, setForm] = useState({ email: "", password: "" });
+	const [state, dispatch] = useContext(StoreContext);
+	const {
+		user: { error, userInfo },
+	} = state;
+
+	useEffect(() => {
+		if (userInfo) {
+			history.push("/home");
+		}
+	}, [history, userInfo]);
 
 	const handleChange = (e) => {
 		const value = e.target.value;
@@ -33,36 +59,63 @@ const Loginpage = () => {
 		setForm({ ...form, [type]: value });
 	};
 
-	const submitHandler = (e) => {
+	const submitHandler = async (e) => {
 		e.preventDefault();
-		console.log("submitted");
+		dispatch({ type: USER_LOGIN_REQUEST });
+
+		const loginInfo = await userLogin(form.email, form.password);
+
+		if (!loginInfo.response) {
+			dispatch({
+				type: USER_LOGIN_SUCCESS,
+				payload: loginInfo,
+			});
+			localStorage.setItem("userInfo", JSON.stringify(loginInfo));
+		} else {
+			dispatch({
+				type: USER_LOGIN_FAIL,
+				payload: loginInfo.response.data.message,
+			});
+		}
 	};
+
+	const loginFormObject = [
+		{
+			type: "email",
+			name: "email",
+			label: "Email",
+			onChange: handleChange,
+			value: form.email,
+			errorMessage: "",
+		},
+		{
+			type: "password",
+			name: "password",
+			label: "Password",
+			onChange: handleChange,
+			value: form.password,
+			errorMessage: "",
+		},
+	];
 
 	return (
 		<Container>
-			<form>
-				<div className='input-container'>
-					<label>Email: </label>
-					<input
-						type='text'
-						value={form.email}
-						onChange={handleChange}
-						name='email'
-					/>
-				</div>
-				<div className='input-container'>
-					<label>Password: </label>
-					<input
-						type='password'
-						value={form.password}
-						onChange={handleChange}
-						name='password'
-					/>
-				</div>
-				<button type='submit' onClick={submitHandler}>
-					Submit
-				</button>
-			</form>
+			<div style={{ height: "1rem" }}>
+				{error === "" ? null : (
+					<ErrorMessage>
+						<FontAwesomeIcon
+							icon={faExclamationTriangle}
+							color='red'
+						/>
+						{error}
+					</ErrorMessage>
+				)}
+			</div>
+			<Form
+				obj={loginFormObject}
+				title='Login'
+				onSubmit={submitHandler}
+			/>
 		</Container>
 	);
 };
