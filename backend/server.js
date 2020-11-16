@@ -4,6 +4,7 @@ import morgan from "morgan";
 import colors from "colors";
 import dbConnect from "./mongo/dbConnect.js";
 import userRoutes from "./routes/userRoutes.js";
+import { errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
 
@@ -23,6 +24,9 @@ app.use(express.json());
 
 // user route
 app.use("/api", userRoutes);
+
+// error middleware
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

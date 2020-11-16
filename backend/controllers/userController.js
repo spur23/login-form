@@ -19,30 +19,32 @@ const userRegister = asyncHandler(async (req, res) => {
 		if (userExists) {
 			res.status(400);
 			throw new Error("User already exists");
-		} else {
-			const user = await User.create({
-				nameFirst,
-				nameLast,
-				email,
-				password,
-			});
-			if (user) {
-				res.status(201).json({
-					_id: user._id,
-					nameFirst: user.nameFirst,
-					nameLast: user.nameLast,
-					email: user.email,
-					password: user.password,
-				});
-			} else {
-				res.status(400);
-				throw new Error("Invalid user data");
-			}
 		}
-	} else {
-		res.status(40);
-		throw new Error(`${registrationValid} is required`);
+
+		const user = await User.create({
+			nameFirst,
+			nameLast,
+			email,
+			password,
+		});
+
+		if (user) {
+			res.status(201).json({
+				_id: user._id,
+				nameFirst: user.nameFirst,
+				nameLast: user.nameLast,
+				email: user.email,
+				password: user.password,
+			});
+		} else {
+			res.status(400);
+			throw new Error("Invalid user data");
+		}
 	}
+	// } else {
+	// 	res.status(40);
+	// 	throw new Error(`${registrationValid} is required`);
+	// }
 });
 
 // login a user
