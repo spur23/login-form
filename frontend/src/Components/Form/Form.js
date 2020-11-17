@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import InputField from "../InputField";
-import ErrorMessage from "../ErrorMessage";
+import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import FormStyle from "./FormStyle";
 
 const Form = ({ obj, title, onSubmit }) => {

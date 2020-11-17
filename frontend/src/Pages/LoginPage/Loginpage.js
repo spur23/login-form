@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import Form from "../../Components/Form/Form";
-import ErrorMessage from "../../Components/ErrorMessage";
+import ErrorMessage from "../../Components/ErrorMessage/ErrorMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { StoreContext } from "../../context/store";

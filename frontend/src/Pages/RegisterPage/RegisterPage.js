@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
-import ErrorMessage from "../../Components/ErrorMessage";
+import ErrorMessage from "../../Components/ErrorMessage/ErrorMessage";
 import Form from "../../Components/Form/Form";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/Loader/Loader";
 import { StoreContext } from "../../context/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
