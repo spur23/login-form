@@ -1,44 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
-import Form from "../Components/Form";
-import styled from "styled-components";
-import ErrorMessage from "../Components/ErrorMessage";
+import Form from "../../Components/Form/Form";
+import ErrorMessage from "../../Components/ErrorMessage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { StoreContext } from "../context/store";
+import { StoreContext } from "../../context/store";
 import {
 	USER_LOGIN_FAIL,
 	USER_LOGIN_REQUEST,
 	USER_LOGIN_SUCCESS,
-} from "../context/constants/userConstants";
-import { userLogin } from "../context/userActions";
-
-const Container = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	margin: auto;
-	margin-top: 5rem;
-	box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-	border-radius: 4px;
-	width: 50vw;
-	& form {
-		display: flex;
-		flex-direction: column;
-		width: 20vw;
-		align-items: center;
-		justify-items: center;
-		& button {
-			width: 5rem;
-			margin-top: 1rem;
-		}
-		& .input-container {
-			margin-top: 1rem;
-			display: flex;
-			flex-direction: column;
-		}
-	}
-`;
+} from "../../context/constants/userConstants";
+import { userLogin } from "../../context/userActions";
+import Container from "./LoginPageStyle";
 
 const Loginpage = ({ history }) => {
 	const [form, setForm] = useState({ email: "", password: "" });

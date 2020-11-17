@@ -3,6 +3,9 @@ import {
 	USER_LOGIN_REQUEST,
 	USER_LOGIN_SUCCESS,
 	USER_LOGOUT_SUCCESS,
+	USER_REGISTER_FAIL,
+	USER_REGISTER_REQUEST,
+	USER_REGISTER_SUCCESS,
 } from "./constants/userConstants";
 
 const userFromStorage = localStorage.getItem("userInfo")
@@ -55,6 +58,31 @@ export const userReducer = (state = initialState, action) => {
 				user: {
 					...state.user,
 					userInfo: null,
+				},
+			};
+		case USER_REGISTER_REQUEST:
+			return {
+				...state,
+				user: {
+					...state.user,
+					loading: true,
+				},
+			};
+		case USER_REGISTER_SUCCESS:
+			return {
+				...state,
+				user: {
+					...state.user,
+					loading: false,
+				},
+			};
+		case USER_REGISTER_FAIL:
+			return {
+				...state,
+				user: {
+					...state.user,
+					error: action.payload,
+					loading: false,
 				},
 			};
 		default:

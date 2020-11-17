@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, BrowserRouter as Router } from "react-router-dom";
 import { StoreContextProvider } from "./context/store";
-import NavBar from "./Components/NavBar";
+import NavBar from "./Components/NavBar/NavBar";
 import HomePage from "./Pages/HomePage";
-import Loginpage from "./Pages/Loginpage";
-import RegisterPage from "./Pages/RegisterPage";
+import Loginpage from "./Pages/LoginPage/Loginpage";
+import RegisterPage from "./Pages/RegisterPage/RegisterPage";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -13,6 +13,7 @@ const Container = styled.div`
 	width: 90vw;
 	align-content: center;
 	justify-content: center;
+	margin: auto;
 `;
 
 const App = () => {
