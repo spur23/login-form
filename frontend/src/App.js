@@ -24,7 +24,7 @@ const App = () => {
 				<Container>
 					<NavBar />
 					<main>
-						<Route path='/' component={HomePage} />
+						<Route exact path='/' component={HomePage} />
 						<Route path='/login' component={Loginpage} />
 						<Route path='/register' component={RegisterPage} />
 						<Route path='/profile' component={ProfilePage} />
