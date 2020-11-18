@@ -54,6 +54,7 @@ const ProfilePage = ({ history }) => {
 	const submitHandler = async (e) => {
 		e.preventDefault();
 		const errorMessage = RegisterPageError(profile);
+
 		setError(errorMessage);
 
 		dispatch({ type: USER_PROFILE_UPDATE_REQUEST });
@@ -112,7 +113,7 @@ const ProfilePage = ({ history }) => {
 					alignSelf: "center",
 				}}
 			>
-				{error === "" ? null : (
+				{error === "" || error === undefined ? null : (
 					<ErrorMessage>
 						<FontAwesomeIcon
 							icon={faExclamationTriangle}
