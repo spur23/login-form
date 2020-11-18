@@ -23,6 +23,7 @@ const NavBar = () => {
 			</div>
 			<Wrapper>
 				<Link to='/home'>Home</Link>
+
 				<>
 					{!userInfo ? (
 						<>
@@ -31,8 +32,9 @@ const NavBar = () => {
 						</>
 					) : (
 						<div className='login-info'>
+							<Link to='/profile'>View Profile</Link>
 							<p>
-								Logged in as {userInfo.nameFirst}{" "}
+								Signed in as {userInfo.nameFirst}{" "}
 								{userInfo.nameLast}
 							</p>
 							<button onClick={onClickHandler}>(Sign out)</button>
