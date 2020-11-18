@@ -19,7 +19,7 @@ const NavBar = () => {
 	return (
 		<Container>
 			<div>
-				<h1>Welcome</h1>
+				<h2>Login Form</h2>
 			</div>
 			<Wrapper>
 				<Link to='/'>Home</Link>
