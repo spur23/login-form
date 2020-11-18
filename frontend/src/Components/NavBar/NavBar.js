@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { StoreContext } from "../../context/store";
 import { userLogout } from "../../context/userActions";
 import { USER_LOGOUT_SUCCESS } from "../../context/constants/userConstants";
@@ -14,7 +14,7 @@ const NavBar = ({ history }) => {
 	const onClickHandler = (e) => {
 		userLogout();
 		dispatch({ type: USER_LOGOUT_SUCCESS });
-		history.push("/");
+		history.push("");
 	};
 
 	return (
@@ -49,4 +49,4 @@ const NavBar = ({ history }) => {
 	);
 };
 
-export default NavBar;
+export default withRouter(NavBar);
