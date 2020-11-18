@@ -5,7 +5,7 @@ import { userLogout } from "../../context/userActions";
 import { USER_LOGOUT_SUCCESS } from "../../context/constants/userConstants";
 import { Container, Wrapper } from "./NavBarStyle";
 
-const NavBar = () => {
+const NavBar = ({ history }) => {
 	const [state, dispatch] = useContext(StoreContext);
 	const {
 		user: { userInfo },
@@ -14,6 +14,7 @@ const NavBar = () => {
 	const onClickHandler = (e) => {
 		userLogout();
 		dispatch({ type: USER_LOGOUT_SUCCESS });
+		history.push("/");
 	};
 
 	return (
@@ -22,7 +23,9 @@ const NavBar = () => {
 				<h2>Login Form</h2>
 			</div>
 			<Wrapper>
-				<Link to='/'>Home</Link>
+				<Link to='/' exact>
+					Home
+				</Link>
 
 				<>
 					{!userInfo ? (
