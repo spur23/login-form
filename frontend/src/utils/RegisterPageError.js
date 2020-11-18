@@ -6,7 +6,6 @@ const RegisterPageError = (
 	passwordCapitalLetterQuantity,
 	passwordSpecialCharacterQuantity
 ) => {
-	console.log(register.password);
 	// checks if the register page inputs meet the requirements
 	if (register.nameFirst.length <= 3) {
 		return "First Name is required.";
