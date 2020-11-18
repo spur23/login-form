@@ -21,7 +21,7 @@ const Loginpage = ({ history }) => {
 
 	useEffect(() => {
 		if (userInfo) {
-			history.push("/home");
+			history.push("/profile");
 		}
 	}, [history, userInfo]);
 
