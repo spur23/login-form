@@ -39,3 +39,25 @@ export const userRegister = async (nameFirst, nameLast, email, password) => {
 		return error;
 	}
 };
+
+export const userProfileUpdate = async (nameFirst, nameLast, email, token) => {
+	try {
+		const { data } = await axios.put(
+			"/api/profile",
+			{
+				nameFirst,
+				nameLast,
+				email,
+			},
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
+		return data;
+	} catch (error) {
+		return error;
+	}
+};
