@@ -3,6 +3,9 @@ import {
 	USER_LOGIN_REQUEST,
 	USER_LOGIN_SUCCESS,
 	USER_LOGOUT_SUCCESS,
+	USER_PROFILE_UPDATE_FAIL,
+	USER_PROFILE_UPDATE_REQUEST,
+	USER_PROFILE_UPDATE_SUCCESS,
 	USER_REGISTER_FAIL,
 	USER_REGISTER_REQUEST,
 	USER_REGISTER_SUCCESS,
@@ -73,6 +76,7 @@ export const userReducer = (state = initialState, action) => {
 				...state,
 				user: {
 					...state.user,
+
 					loading: false,
 				},
 			};
@@ -82,6 +86,37 @@ export const userReducer = (state = initialState, action) => {
 				user: {
 					...state.user,
 					error: action.payload,
+					loading: false,
+				},
+			};
+		case USER_PROFILE_UPDATE_REQUEST:
+			return {
+				...state,
+				user: {
+					...state.user,
+					loading: true,
+				},
+			};
+		case USER_PROFILE_UPDATE_FAIL:
+			return {
+				...state,
+				user: {
+					...state.user,
+					error: action.payload,
+					loading: false,
+				},
+			};
+		case USER_PROFILE_UPDATE_SUCCESS:
+			return {
+				...state,
+				user: {
+					...state.user,
+					userInfo: {
+						...state.user.userInfo,
+						nameFirst: action.payload.nameFirst,
+						nameLast: action.payload.nameLast,
+						email: action.payload.email,
+					},
 					loading: false,
 				},
 			};
