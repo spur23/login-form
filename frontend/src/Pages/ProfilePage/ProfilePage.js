@@ -8,10 +8,12 @@ import RegisterPageError from "../../utils/RegisterPageError";
 import Loader from "../../Components/Loader/Loader";
 import { checkError } from "../../utils/RegisterFormErrorCheck";
 import {
+	USER_PROFILE_UPDATE_FAIL,
 	USER_PROFILE_UPDATE_REQUEST,
 	USER_PROFILE_UPDATE_SUCCESS,
 } from "../../context/constants/userConstants";
 import { userProfileUpdate } from "../../context/userActions";
+import { Container } from "../RegisterPage/RegisterPageStyle";
 
 const ProfilePage = ({ history }) => {
 	const [profile, setProfile] = useState({
@@ -24,10 +26,10 @@ const ProfilePage = ({ history }) => {
 		nameLast: "",
 		email: "",
 	});
-	const [error, setError] = useState("");
+	const [errorMess, setErrorMess] = useState("");
 	const [state, dispatch] = useContext(StoreContext);
 	const {
-		user: { userInfo, loading },
+		user: { userInfo, loading, error },
 	} = state;
 
 	useEffect(() => {
@@ -55,7 +57,7 @@ const ProfilePage = ({ history }) => {
 		e.preventDefault();
 		const errorMessage = RegisterPageError(profile);
 
-		setError(errorMessage);
+		setErrorMess(errorMessage);
 
 		dispatch({ type: USER_PROFILE_UPDATE_REQUEST });
 
@@ -75,6 +77,14 @@ const ProfilePage = ({ history }) => {
 					email: profile.email,
 				},
 			});
+		} else {
+			if (userUpdate.response.data.message.includes("email")) {
+				const payloadMessage = `Duplicate email ${profile.email} please try again.`;
+				dispatch({
+					type: USER_PROFILE_UPDATE_FAIL,
+					payload: payloadMessage,
+				});
+			}
 		}
 	};
 
@@ -106,7 +116,7 @@ const ProfilePage = ({ history }) => {
 	];
 
 	return (
-		<div>
+		<Container>
 			{loading ? (
 				<Loader />
 			) : (
@@ -117,14 +127,25 @@ const ProfilePage = ({ history }) => {
 							alignSelf: "center",
 						}}
 					>
-						{error === "" || error === undefined ? null : (
+						{errorMess === "" || errorMess === undefined ? null : (
 							<ErrorMessage>
 								<FontAwesomeIcon
 									icon={faExclamationTriangle}
 									color='red'
 								/>{" "}
-								{error}
+								{errorMess}
 							</ErrorMessage>
+						)}
+						{error === "" ? null : (
+							<div>
+								<ErrorMessage>
+									<FontAwesomeIcon
+										icon={faExclamationTriangle}
+										color='red'
+									/>{" "}
+									{error}
+								</ErrorMessage>
+							</div>
 						)}
 					</div>
 					<Form
@@ -136,7 +157,7 @@ const ProfilePage = ({ history }) => {
 					/>
 				</>
 			)}
-		</div>
+		</Container>
 	);
 };
 
