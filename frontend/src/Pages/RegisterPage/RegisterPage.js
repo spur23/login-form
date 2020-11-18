@@ -63,7 +63,7 @@ const RegisterPage = ({ location, history }) => {
 		if (state.user.error) {
 			setError(state.user.error);
 		} else if (userInfo) {
-			history.push("/home");
+			history.push("/profile");
 		}
 	}, [history, state, state.user.error]);
 
