@@ -22,7 +22,7 @@ const NavBar = () => {
 				<h1>Welcome</h1>
 			</div>
 			<Wrapper>
-				<Link to='/home'>Home</Link>
+				<Link to='/'>Home</Link>
 
 				<>
 					{!userInfo ? (
