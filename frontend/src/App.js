@@ -5,6 +5,7 @@ import NavBar from "./Components/NavBar/NavBar";
 import HomePage from "./Pages/HomePage";
 import Loginpage from "./Pages/LoginPage/Loginpage";
 import RegisterPage from "./Pages/RegisterPage/RegisterPage";
+import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -26,6 +27,7 @@ const App = () => {
 						<Route path='/home' component={HomePage} />
 						<Route path='/login' component={Loginpage} />
 						<Route path='/register' component={RegisterPage} />
+						<Route path='/profile' component={ProfilePage} />
 					</main>
 				</Container>
 			</Router>
