@@ -1,7 +1,7 @@
 import React from "react";
 
 const InputField = (props) => {
-	const { type, name, value, label, defaultValue, onChange } = props;
+	const { type, name, value, label, placeholder, onChange } = props;
 	return (
 		<>
 			<label htmlFor={name}>{label}</label>
@@ -10,7 +10,7 @@ const InputField = (props) => {
 				id={name}
 				name={name}
 				value={value}
-				defaultValue={defaultValue}
+				placeHolder={placeholder}
 				onChange={onChange}
 			/>
 		</>

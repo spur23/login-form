@@ -16,7 +16,7 @@ const Form = ({ obj, title, onSubmit, submit, submitText }) => {
 						name={el.name}
 						value={el.value}
 						label={el.label}
-						defaultValue={el.defaultValue}
+						placeholder={el.defaultValue}
 						onChange={el.onChange}
 						key={`Input-${el.name}`}
 					/>
