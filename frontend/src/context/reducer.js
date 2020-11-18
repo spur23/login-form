@@ -118,6 +118,7 @@ export const userReducer = (state = initialState, action) => {
 						email: action.payload.email,
 					},
 					loading: false,
+					error: "",
 				},
 			};
 		default:
