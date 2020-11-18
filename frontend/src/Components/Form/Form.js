@@ -3,8 +3,9 @@ import InputField from "../InputField";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import FormStyle from "./FormStyle";
 
-const Form = ({ obj, title, onSubmit }) => {
+const Form = ({ obj, title, onSubmit, submit, submitText }) => {
 	useEffect(() => {}, [obj]);
+
 	return (
 		<FormStyle>
 			<h1>{title}</h1>
@@ -28,9 +29,11 @@ const Form = ({ obj, title, onSubmit }) => {
 					</div>
 				</React.Fragment>
 			))}
-			<button type='submit' onClick={onSubmit}>
-				Submit
-			</button>
+			{submit || submit === undefined ? (
+				<button type='submit' onClick={onSubmit}>
+					{submitText !== undefined ? submitText : "Submit"}
+				</button>
+			) : null}
 		</FormStyle>
 	);
 };
