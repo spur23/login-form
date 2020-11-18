@@ -11,6 +11,7 @@ const HomePage = () => {
 				<Link to='/register'>register</Link> or{" "}
 				<Link to='/login'>login</Link> to test the functionality
 			</p>
+			<p></p>
 		</div>
 	);
 };
